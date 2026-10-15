@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Cardápio - Pizzaria Roma{% endblock %}
+
+{% block content %}
+<h1>Nosso Cardápio</h1>
+
+{% for categoria in categorias %}
+    <section class="categoria">
+        <h2>{{ categoria.nome }}</h2>
+        <div class="produtos-grid">
+            {% for produto in categoria.produtos.all %}
+                {% if produto.disponivel %}
+                    <div class="produto-card">
+                        {% if produto.imagem %}
+                            <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+                        {% endif %}
+                        <h3>{{ produto.nome }}</h3>
+                        <p>{{ produto.descricao }}</p>
+                        <p class="preco">R$ {{ produto.preco }}</p>
+                        <form action="{% url 'adicionar_ao_carrinho' produto.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-adicionar">
+                                <svg class="icone" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+                                Adicionar ao carrinho
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+{% endfor %}
+{% endblock %}

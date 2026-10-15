@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Pizzaria Roma{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8D%95</text></svg>">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Carregando...</p>
+    </div>
+
+    <header class="header">
+        <div class="container">
+            <a href="{% url 'cardapio' %}" class="logo">🍕 Pizzaria Roma</a>
+            <nav>
+                <a href="{% url 'cardapio' %}">
+                    <svg class="icone" viewBox="0 0 24 24"><path d="M3 3l7 7M3 10l7-7M12 21V8M8 8h8l-1 5a3 3 0 0 1-6 0z"/></svg>
+                    Cardápio
+                </a>
+                <a href="{% url 'ver_carrinho' %}">
+                    <svg class="icone" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+                    Carrinho
+                </a>
+                <a href="{% url 'acompanhar_pedido' %}">
+                    <svg class="icone" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.3-4.3"/></svg>
+                    Meu Pedido
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Pizzaria Roma — Projeto Didático IESB</p>
+    </footer>
+
+    <script src="{% static 'js/loading.js' %}" defer></script>
+</body>
+</html>

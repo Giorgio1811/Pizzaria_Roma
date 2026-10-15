@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Acompanhar Pedido{% endblock %}
+
+{% block content %}
+<h1>Acompanhar Pedido</h1>
+
+<form method="post" class="form-checkout">
+    {% csrf_token %}
+    <label>Número do pedido</label>
+    <input type="number" name="pedido_id" min="1" required>
+    <button type="submit" class="btn-confirmar">Buscar</button>
+</form>
+
+{% if pedido %}
+    <div class="status-pedido">
+        <p>Pedido #{{ pedido.id }} - {{ pedido.nome_cliente }}</p>
+        <p>
+            Status:
+            <span class="badge badge-{{ pedido.status }}">
+                <span class="badge-bolinha"></span>
+                {{ pedido.get_status_display }}
+            </span>
+        </p>
+    </div>
+{% endif %}
+{% endblock %}

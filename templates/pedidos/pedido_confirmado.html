@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Pedido Confirmado{% endblock %}
+
+{% block content %}
+<div class="confirmacao">
+    <h1>Pedido Confirmado! ✅</h1>
+    <p>Número do seu pedido: <strong>#{{ pedido.id }}</strong></p>
+    <p>Guarde este número para acompanhar o status.</p>
+    <p>Total: R$ {{ pedido.valor_total }}</p>
+    <a href="{% url 'cardapio' %}" class="btn-confirmar">Voltar ao cardápio</a>
+</div>
+{% endblock %}

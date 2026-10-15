@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Carrinho - Pizzaria Roma{% endblock %}
+
+{% block content %}
+<h1>Seu Carrinho</h1>
+
+{% if itens %}
+    <table class="tabela-carrinho">
+        <thead>
+            <tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Subtotal</th><th></th></tr>
+        </thead>
+        <tbody>
+            {% for item in itens %}
+                <tr>
+                    <td>{{ item.nome }}</td>
+                    <td>{{ item.quantidade }}</td>
+                    <td>R$ {{ item.preco }}</td>
+                    <td>R$ {{ item.subtotal }}</td>
+                    <td>
+                        <form action="{% url 'remover_do_carrinho' item.produto_id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-remover">Remover</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p class="total">Total: R$ {{ total }}</p>
+
+    <form action="{% url 'finalizar_pedido' %}" method="post" class="form-checkout">
+        {% csrf_token %}
+        <label>Nome completo</label>
+        <input type="text" name="nome_cliente" maxlength="100" required>
+        <label>Telefone</label>
+        <input type="tel" name="telefone_cliente" maxlength="20" required>
+        <label>Endereço de entrega</label>
+        <input type="text" name="endereco_entrega" maxlength="200" required>
+        <button type="submit" class="btn-confirmar">Confirmar Pedido</button>
+    </form>
+{% else %}
+    <p>Seu carrinho está vazio. <a href="{% url 'cardapio' %}">Ver cardápio</a></p>
+{% endif %}
+{% endblock %}
