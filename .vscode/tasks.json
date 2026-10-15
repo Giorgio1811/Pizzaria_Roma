@@ -1,0 +1,33 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Vercel: Login",
+            "type": "shell",
+            "command": "npx -y vercel@latest login",
+            "problemMatcher": []
+        },
+        {
+            "label": "Vercel: Deploy (Preview)",
+            "type": "shell",
+            "command": "npx -y vercel@latest",
+            "problemMatcher": []
+        },
+        {
+            "label": "Vercel: Deploy (Produção)",
+            "type": "shell",
+            "command": "npx -y vercel@latest --prod",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Vercel: Logs",
+            "type": "shell",
+            "command": "npx -y vercel@latest logs",
+            "problemMatcher": []
+        }
+    ]
+}

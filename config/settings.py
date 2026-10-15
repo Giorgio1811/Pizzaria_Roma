@@ -81,6 +81,9 @@ DATABASES = {
         'PASSWORD': os.getenv('SUPABASE_DB_PASSWORD'),
         'HOST': os.getenv('SUPABASE_DB_HOST'),
         'PORT': os.getenv('SUPABASE_DB_PORT'),
+        # O pooler do Supabase (porta 6543) não suporta cursores do lado do servidor
+        'DISABLE_SERVER_SIDE_CURSORS': True,
+        'OPTIONS': {'sslmode': 'require'},
     }
 }
 
