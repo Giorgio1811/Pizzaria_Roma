@@ -32,23 +32,38 @@ def env_bool(name, default=False):
     return value.strip().lower() in {'1', 'true', 'yes', 'on'}
 
 
-DEBUG = env_bool('DEBUG')
-ALLOWED_HOSTS = [
-    host.strip()
-    for host in os.getenv(
-        'ALLOWED_HOSTS', 'localhost,127.0.0.1'
-    ).split(',')
-    if host.strip()
+def env_list(name):
+    return [
+        value.strip()
+        for value in os.getenv(name, '').split(',')
+        if value.strip()
+    ]
+
+
+IS_VERCEL = os.getenv('VERCEL') == '1'
+DEBUG = env_bool('DEBUG') and not IS_VERCEL
+ALLOWED_HOSTS = env_list('ALLOWED_HOSTS') or [
+    'localhost',
+    '127.0.0.1',
+    'pizzaria-roma-two.vercel.app',
 ]
+for vercel_host in (
+    os.getenv('VERCEL_URL'),
+    os.getenv('VERCEL_PROJECT_PRODUCTION_URL'),
+):
+    if vercel_host and vercel_host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(vercel_host)
 
 # Libera os formulários (POST) vindos do domínio da Vercel em HTTPS
-CSRF_TRUSTED_ORIGINS = [
-    origin.strip()
-    for origin in os.getenv(
-        'CSRF_TRUSTED_ORIGINS', 'https://*.vercel.app'
-    ).split(',')
-    if origin.strip()
-]
+CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS')
+for vercel_host in (
+    os.getenv('VERCEL_URL'),
+    os.getenv('VERCEL_PROJECT_PRODUCTION_URL'),
+):
+    if vercel_host:
+        CSRF_TRUSTED_ORIGINS.append(f'https://{vercel_host}')
+if not CSRF_TRUSTED_ORIGINS:
+    CSRF_TRUSTED_ORIGINS = ['https://pizzaria-roma-two.vercel.app']
 
 
 # Application definition

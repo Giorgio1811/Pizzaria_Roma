@@ -65,3 +65,14 @@ arquivo .env foi copiado para este relatorio.
 - .env, venv/, media/, staticfiles/ e .vercel/ permanecem fora do commit.
 - Nenhum segredo foi adicionado ao codigo, ao relatorio ou ao historico do
   commit.
+
+6. CORRECAO DO DEPLOY NA VERCEL
+
+- A URL de producao retornava "DisallowedHost" porque o dominio
+  pizzaria-roma-two.vercel.app nao estava em ALLOWED_HOSTS. Corrigido com
+  suporte ao dominio oficial e aos hosts dinamicos VERCEL_URL e
+  VERCEL_PROJECT_PRODUCTION_URL.
+- DEBUG agora e automaticamente desativado quando a aplicacao detecta o
+  ambiente Vercel, mesmo que o .env local tenha DEBUG=True.
+- As origens CSRF tambem passam a incluir os dominios oficiais fornecidos pela
+  Vercel, sem inserir credenciais ou valores sensiveis no codigo.
