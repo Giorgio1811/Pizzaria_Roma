@@ -2,9 +2,12 @@ venv/
 __pycache__/
 *.pyc
 .env
+.env.*
+!.env.example
 db.sqlite3
 staticfiles/
 media/
 .DS_Store
-
 .vercel/
+*.pem
+*.key

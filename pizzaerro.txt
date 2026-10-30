@@ -1,0 +1,67 @@
+RELATORIO DE REVISAO - PIZZARIA ROMA
+Data: 2026-10-29
+
+Este arquivo registra os problemas encontrados na revisao do projeto e a
+situacao de cada um. Nenhum segredo, senha, usuario, e-mail ou valor do
+arquivo .env foi copiado para este relatorio.
+
+1. CONFIGURACAO E SEGURANCA
+
+- ALLOWED_HOSTS estava definido como ['*'], permitindo qualquer host. Corrigido
+  para leitura por variavel de ambiente, com padrao local restrito.
+- SECRET_KEY podia ficar vazia quando a variavel nao existisse. Corrigido para
+  falhar explicitamente na inicializacao, sem usar uma chave embutida.
+- DEBUG era interpretado somente quando o texto era exatamente 'True'.
+  Corrigido para aceitar valores booleanos usuais de ambiente.
+- A configuracao de e-mail usava MAILERS, que nao e uma configuracao Django
+  valida. Corrigido para EMAIL_BACKEND.
+- Foram adicionadas protecoes de producao: cookies seguros, redirecionamento
+  HTTPS, HSTS, nosniff, politica de referer e X-Frame-Options.
+- O .gitignore nao protegia variantes .env.* nem chaves de certificado.
+  Corrigido sem remover a protecao existente do .env.
+- O .env local esta ignorado pelo Git, mas contem SECRET_KEY de desenvolvimento
+  (prefixo django-insecure-) e DEBUG=True. Antes de publicar, gerar uma chave
+  aleatoria nova e configurar DEBUG=False somente no ambiente da Vercel. Os
+  valores locais nao foram alterados nem expostos.
+- CSRF_TRUSTED_ORIGINS continua aceitando o padrao de previews da Vercel para
+  preservar o deploy, mas pode ser restringido definindo a variavel com os
+  dominios reais.
+
+2. CARRINHO E PEDIDOS
+
+- O carrinho guardava nome e preco na sessao e podia exibir/precarregar dados
+  antigos depois de uma alteracao no admin. Corrigido: a sessao guarda apenas
+  IDs e quantidades; nome e preco sao lidos do banco.
+- O checkout confiava no preco salvo na sessao. Corrigido para calcular o total
+  e gravar o preco unitario atual do banco dentro de transacao atomica.
+- Produtos removidos ou marcados como indisponiveis podiam causar erro ou ainda
+  ser comprados. Corrigido com validacao e mensagem para revisao do carrinho.
+- Dados corrompidos na sessao podiam gerar excecoes ou quantidades excessivas.
+  Corrigido com saneamento e limite de 99 unidades por produto.
+- A consulta de pedido aceitava somente o ID, permitindo enumeracao de pedidos
+  e exposicao do nome do cliente. Corrigido para exigir ID e telefone exatos e
+  para nao exibir o nome na consulta publica.
+- Categoria nao tinha unicidade garantida. Corrigido com unique=True e migration
+  0002. Verificar duplicidades existentes antes de aplicar a migration em uma
+  base de dados que ja contenha categorias repetidas.
+
+3. QUALIDADE E MANUTENCAO
+
+- Nao havia testes automatizados. Adicionados testes para preco atualizado,
+  checkout atomico, produto indisponivel e protecao da consulta de pedido.
+- Os cabecalhos/documentacao gerados mencionavam Django 6.1, enquanto
+  requirements.txt restringe Django a 5.x e o ambiente validado usa 5.2.
+  Corrigidos os links e a referencia de versao.
+- Foi gerada a migration necessaria para as alteracoes de modelo.
+
+4. VALIDACAO
+
+- python manage.py check: aprovado.
+- python manage.py makemigrations --check --dry-run: aprovado.
+- python manage.py test --keepdb: 4 testes aprovados.
+
+5. ARQUIVOS SENSIVEIS
+
+- .env, venv/, media/, staticfiles/ e .vercel/ permanecem fora do commit.
+- Nenhum segredo foi adicionado ao codigo, ao relatorio ou ao historico do
+  commit.

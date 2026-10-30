@@ -9,12 +9,15 @@
     {% csrf_token %}
     <label>Número do pedido</label>
     <input type="number" name="pedido_id" min="1" required>
+    <label for="telefone_cliente">Telefone usado no pedido</label>
+    <input type="tel" id="telefone_cliente" name="telefone_cliente"
+           maxlength="20" required>
     <button type="submit" class="btn-confirmar">Buscar</button>
 </form>
 
 {% if pedido %}
     <div class="status-pedido">
-        <p>Pedido #{{ pedido.id }} - {{ pedido.nome_cliente }}</p>
+        <p>Pedido #{{ pedido.id }}</p>
         <p>
             Status:
             <span class="badge badge-{{ pedido.status }}">

@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Categoria(models.Model):
-    nome = models.CharField(max_length=50)
+    nome = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.nome
@@ -43,6 +43,9 @@ class Pedido(models.Model):
     valor_total = models.DecimalField(
         max_digits=8, decimal_places=2, default=0
     )
+
+    class Meta:
+        ordering = ('-data_criacao',)
 
     def __str__(self):
         return f'Pedido #{self.id} - {self.nome_cliente}'
